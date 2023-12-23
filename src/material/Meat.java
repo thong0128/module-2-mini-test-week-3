@@ -1,7 +1,5 @@
 package material;
 
-import material.Material;
-
 import java.time.LocalDate;
 
 public class Meat extends Material implements Discount {

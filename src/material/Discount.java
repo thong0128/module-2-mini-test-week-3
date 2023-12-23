@@ -1,10 +1,10 @@
 package material;
 
 public interface Discount {
-    final double DISCOUNT30 = 0.7;
-    final double DISCOUNT40 = 0.6;
-    final double DISCOUNT10 = 0.9;
-    final double DISCOUNT20 = 0.8;
-    final double DISCOUNT05 = 0.95;
+    double DISCOUNT30 = 0.7;
+    double DISCOUNT40 = 0.6;
+    double DISCOUNT10 = 0.9;
+    double DISCOUNT20 = 0.8;
+    double DISCOUNT05 = 0.95;
     double getRealMoney();
 }
