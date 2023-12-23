@@ -5,6 +5,7 @@ import material.Meat;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.Scanner;
 
 public class MaterialManager {
@@ -34,31 +35,212 @@ public class MaterialManager {
         materialsList.add(meat4);
         materialsList.add(meat5);
 
-
+        mainMenu(materialsList);
     }
+    public static void mainMenu(ArrayList<Material> materialsList) {
+        int myChoice;
+        Scanner scanner = new Scanner(System.in);
+        while (true) {
+            System.out.println("-----Material Manager-----");
+            System.out.println("1.Add material");
+            System.out.println("2.Modify material");
+            System.out.println("3.Remove material");
+            System.out.println("4.Total cost with discount today");
+            System.out.println("5.Sort by cost");
+            System.out.println("6.Difference between discount and no discount today");
+            System.out.println("0.Exit");
+
+            System.out.print("Enter choice: ");
+            myChoice = scanner.nextInt();
+            switch (myChoice) {
+                case 1:
+                    addMaterialMenu(materialsList);
+                    break;
+                case 2:
+                    modifyMenu(materialsList);
+                    break;
+                case 3:
+                    removeMenu(materialsList);
+                    break;
+                case 4:
+                    System.out.println("Total cost with discount: " + getTotalRealMoney(materialsList));
+                    break;
+                case 5:
+                    System.out.println("List before sorting: ");
+                    showList(materialsList);
+                    System.out.println("\n List after sorting: ");
+                    sortByCost(materialsList);
+                    showList(materialsList);
+                    break;
+                case 6:
+                    System.out.println("Difference between discount and no discount today: " + (getTotalCost(materialsList) - getTotalRealMoney(materialsList)));
+                    break;
+                case 0:
+                    System.exit(0);
+                default:
+                    System.out.println("Invalid input!");
+            }
+        }
+    }
+
+    private static void removeMenu(ArrayList<Material> materialsList) {
+        int myChoice = -1;
+        Scanner scanner = new Scanner(System.in);
+        while (myChoice != 0) {
+            System.out.println("-----Remove Menu-----");
+            System.out.println("1.Remove by index");
+            System.out.println("0.Back");
+
+            System.out.print("Enter choice: ");
+            myChoice = scanner.nextInt();
+
+            switch (myChoice) {
+                case 1:
+                    indexCheck(materialsList);
+                    System.out.println("Material: " + materialsList.get(myChoice));
+                    System.out.println("Are you sure to delete? y/n?");
+                    while (true) {
+                        Scanner input = new Scanner(System.in);
+                        String ans = input.nextLine();
+                        if (ans.equalsIgnoreCase("y")) {
+                            materialsList.remove(myChoice);
+                            break;
+                        } else if (ans.equalsIgnoreCase("n")) {
+                            mainMenu(materialsList);
+                            break;
+                        }else {
+                            System.out.println("Sorry, I didn't catch that. Please answer y/n");
+                        }
+                    }
+                    break;
+                case 0:
+                    mainMenu(materialsList);
+                    break;
+                default:
+                    System.out.println("Invalid input!");
+            }
+        }
+    }
+
+    public static void addMaterialMenu(ArrayList<Material> materialsList) {
+        int myChoice = -1;
+        Scanner scanner = new Scanner(System.in);
+        while (myChoice != 0) {
+            System.out.println("-----Select Type-----");
+            System.out.println("1.Crispy Flour");
+            System.out.println("2.Meat");
+            System.out.println("0.Back");
+
+            System.out.print("Enter choice: ");
+            myChoice = scanner.nextInt();
+            switch (myChoice) {
+                case 1:
+                    materialsList.add(inputCrispyFlour());
+                    mainMenu(materialsList);
+                    break;
+                case 2:
+                    materialsList.add(inputMeat());
+                    mainMenu(materialsList);
+                    break;
+                case 0:
+                    mainMenu(materialsList);
+                    break;
+                default:
+                    System.out.println("Invalid input!");
+            }
+        }
+    }
+    public static void modifyMenu(ArrayList<Material> materialsList) {
+        int myChoice = -1;
+        Scanner scanner = new Scanner(System.in);
+        while (myChoice != 0) {
+            System.out.println("-----Modify Menu-----");
+            System.out.println("1.Modify by index");
+            System.out.println("0.Back");
+
+            System.out.print("Enter choice: ");
+            myChoice = scanner.nextInt();
+
+            switch (myChoice) {
+                case 1:
+                    indexCheck(materialsList);
+                    modifyByIndex(materialsList, materialsList.get(myChoice));
+                    break;
+                case 0:
+                    mainMenu(materialsList);
+                    break;
+                default:
+                    System.out.println("Invalid input!");
+            }
+        }
+    }
+
+    private static void indexCheck(ArrayList<Material> materialsList) {
+        while (true) {
+            Scanner input = new Scanner(System.in);
+            System.out.print("Enter index: ");
+            int index = input.nextInt();
+            if (index < 0 || index >= materialsList.size()) System.out.println("Invalid index!");
+            else break;
+        }
+    }
+
+    private static void modifyByIndex(ArrayList<Material> materialsList, Material material) {
+        int myChoice = -1;
+        Scanner scanner = new Scanner(System.in);
+        while (myChoice != 0) {
+            System.out.println("-----Modify Menu-----");
+            System.out.println(material);
+            System.out.println("1.Modify id");
+            System.out.println("2.Modify name");
+            System.out.println("3.Modify manufacturing date");
+            System.out.println("4.Modify cost");
+            System.out.println("5.Modify quantity/weight");
+            System.out.println("0.Back");
+
+            System.out.print("Enter choice: ");
+            myChoice = scanner.nextInt();
+
+            switch (myChoice) {
+                case 1:
+                    modifyID(material);
+                    break;
+                case 2:
+                    modifyName(material);
+                    break;
+                case 3:
+                    modifyManuDate(material);
+                    break;
+                case 4:
+                    modifyCost(material);
+                    break;
+                case 5:
+                    modifyQuantityWeight(material);
+                    break;
+                case 0:
+                    modifyMenu(materialsList);
+                    break;
+                default:
+                    System.out.println("Invalid input!");
+            }
+        }
+    }
+
     public static String stringInput() {
         Scanner scanner = new Scanner(System.in);
-        String input = scanner.nextLine();
-        System.out.println(input);
-        return input;
+        return scanner.nextLine();
     }
     public static LocalDate dateInput(String userInput) {
         DateTimeFormatter dateFormat = DateTimeFormatter.ofPattern("dd/MM/yyy");
-        LocalDate date = LocalDate.parse(userInput, dateFormat);
-        System.out.println(date);
-        return date ;
+        return LocalDate.parse(userInput, dateFormat);
     }
     public static int intInput() {
         Scanner scanner = new Scanner(System.in);
-        int input = scanner.nextInt();
-        System.out.println(input);
-        return input;
+        return scanner.nextInt();
     }
     public static double doubleInput() {
         Scanner scanner = new Scanner(System.in);
-        double input = scanner.nextDouble();
-        System.out.println(input);
-        return input;
+        return scanner.nextDouble();
     }
     public static Material inputCrispyFlour() {
         TempMaterial temp = getTempMaterial();
@@ -102,28 +284,61 @@ public class MaterialManager {
         }
     }
 
-    public static void changeMaterial(Material material) {
+    public static void modifyQuantityWeight(Material material) {
         if (material instanceof CrispyFlour) {
-            commonChange(material);
             System.out.println("Quantity: " + ((CrispyFlour) material).getQuantity() + ". Enter new quantity:");
             ((CrispyFlour) material).setQuantity(doubleInput());
             System.out.println(material);
         } else if (material instanceof Meat) {
-            commonChange(material);
             System.out.println("Weight: " + ((Meat) material).getWeight() + ". Enter new weight:");
             ((Meat) material).setWeight(doubleInput());
             System.out.println(material);
         }
     }
 
-    private static void commonChange(Material material) {
-        System.out.println("ID: " + material.getId() + ". Enter new id:");
-        material.setId(stringInput());
-        System.out.println("Name: " + material.getName() + ". Enter new name:");
-        material.setName(stringInput());
-        System.out.println("Date: " + material.getManufacturingDate() + ". Enter new date (dd/MM/yyy):");
-        material.setManufacturingDate(dateInput(stringInput()));
+    private static void modifyCost(Material material) {
         System.out.println("Cost: " + material.getCost() + ". Enter new cost:");
         material.setCost(intInput());
+    }
+
+    private static void modifyManuDate(Material material) {
+        System.out.println("Date: " + material.getManufacturingDate() + ". Enter new date (dd/MM/yyy):");
+        material.setManufacturingDate(dateInput(stringInput()));
+    }
+
+    private static void modifyName(Material material) {
+        System.out.println("Name: " + material.getName() + ". Enter new name:");
+        material.setName(stringInput());
+    }
+
+    private static void modifyID(Material material) {
+        System.out.println("ID: " + material.getId() + ". Enter new id:");
+        material.setId(stringInput());
+    }
+    private static double getTotalRealMoney(ArrayList<Material> materialsList) {
+        double sum = 0;
+        for (Material material : materialsList) {
+            if (material instanceof CrispyFlour) sum += ((CrispyFlour)material).getRealMoney();
+            if (material instanceof Meat) sum += ((Meat)material).getRealMoney();
+        }
+        return sum;
+    }
+    private static void sortByCost(ArrayList<Material> materialsList) {
+        Comparator<Material> comparator = Comparator.comparingInt(Material::getCost);
+        materialsList.sort(comparator);
+    }
+
+    private static void showList(ArrayList<Material> materialsList) {
+        for (int i = 0; i < materialsList.size(); i++) {
+            System.out.println((i+1) + "." + materialsList.get(i));
+        }
+    }
+
+    private static double getTotalCost(ArrayList<Material> materialsList) {
+        double sum = 0;
+        for (Material material : materialsList) {
+            sum += material.getAmount();
+        }
+        return sum;
     }
 }

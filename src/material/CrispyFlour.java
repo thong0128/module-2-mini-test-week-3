@@ -43,6 +43,6 @@ public class CrispyFlour extends Material implements Discount {
     public String toString() {
         return "CrispyFlour{" +
                 "quantity=" + quantity +
-                '}';
+                "} " + super.toString();
     }
 }

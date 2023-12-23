@@ -46,6 +46,6 @@ public class Meat extends Material implements Discount {
     public String toString() {
         return "Meat{" +
                 "weight=" + weight +
-                '}';
+                "} " + super.toString();
     }
 }
