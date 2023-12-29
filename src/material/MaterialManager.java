@@ -46,6 +46,7 @@ public class MaterialManager implements Serializable {
 
     public void setMaterialsList(List<Material> materialsList) {
         this.materialsList = materialsList;
+        writeDataToFile();
     }
 
     public String getPath() {
@@ -108,7 +109,6 @@ public class MaterialManager implements Serializable {
     }
     private void addMaterialMenu() {
         int myChoice = -1;
-        Scanner scanner = new Scanner(System.in);
         while (myChoice != 0) {
             System.out.println("-----Select Type-----");
             System.out.println("1.Crispy Flour");
@@ -116,7 +116,7 @@ public class MaterialManager implements Serializable {
             System.out.println("0.Back");
 
             System.out.print("Enter choice: ");
-            myChoice = scanner.nextInt();
+            myChoice = intInput();
             switch (myChoice) {
                 case 1:
                     addCrispyFlour();
@@ -138,7 +138,7 @@ public class MaterialManager implements Serializable {
     }
 
 
-    private TempMaterial getTempMatarial() {
+    private TempMaterial getTempMaterial() {
         String id = autoIdSetter();
         System.out.print("Enter name: ");
         String name = stringInput();
@@ -163,7 +163,7 @@ public class MaterialManager implements Serializable {
         }
     }
     private void addCrispyFlour() {
-        TempMaterial tempMaterial = getTempMatarial();
+        TempMaterial tempMaterial = getTempMaterial();
         System.out.print("Enter quantity: ");
         double quantity = doubleInput();
         Material cf = new CrispyFlour(tempMaterial.id, tempMaterial.name, tempMaterial.date, tempMaterial.cost, quantity);
@@ -171,7 +171,7 @@ public class MaterialManager implements Serializable {
         materialsList.add(cf);
     }
     private void addMeat() {
-        TempMaterial tempMaterial = getTempMatarial();
+        TempMaterial tempMaterial = getTempMaterial();
         System.out.print("Enter weight: ");
         double weight = doubleInput();
         Material meat = new Meat(tempMaterial.id, tempMaterial.name, tempMaterial.date, tempMaterial.cost, weight);
@@ -321,8 +321,7 @@ public class MaterialManager implements Serializable {
                     System.out.println("Material: " + materialsList.get(index));
                     System.out.println("Are you sure to delete? y/n?");
                     while (true) {
-                        Scanner input = new Scanner(System.in);
-                        String ans = input.nextLine();
+                        String ans = stringInput();
                         if (ans.equalsIgnoreCase("y")) {
                             materialsList.remove(index);
                             writeDataToFile();
@@ -376,11 +375,11 @@ public class MaterialManager implements Serializable {
             e.printStackTrace();
         }
     }
-    private List<Material> readDataFromFile() throws ClassNotFoundException {
+    private List<Material> readDataFromFile() {
         List<Material> materials = new ArrayList<>();
         try(ObjectInputStream ois = new ObjectInputStream(new FileInputStream(path))) {
             materials = (List<Material>) ois.readObject();
-        }catch (IOException e) {
+        }catch (IOException | ClassNotFoundException e) {
             e.printStackTrace();
         }
         return materials;
