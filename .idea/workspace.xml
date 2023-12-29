@@ -5,13 +5,9 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="801c403c-fab4-4309-b8cf-ff9a74f17df0" name="Changes" comment="First commit">
-      <change afterPath="$PROJECT_DIR$/src/Main.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/Demo.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/MaterialManager.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/material/MaterialManager.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/material/CrispyFlour.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/material/CrispyFlour.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/material/Material.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/material/Material.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/material/Meat.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/material/Meat.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/MaterialList.mat" beforeDir="false" afterPath="$PROJECT_DIR$/MaterialList.mat" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/material/MaterialManager.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/material/MaterialManager.java" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -41,11 +37,11 @@
   <component name="PropertiesComponent"><![CDATA[{
   "keyToString": {
     "Application.Demo.executor": "Run",
-    "Application.Main.executor": "Run",
+    "Application.Main.executor": "Debug",
     "Application.MaterialManager.executor": "Run",
     "RunOnceActivity.OpenProjectViewOnStart": "true",
     "RunOnceActivity.ShowReadmeOnStart": "true",
-    "git-widget-placeholder": "master",
+    "git-widget-placeholder": "main",
     "ignore.virus.scanning.warn.message": "true",
     "kotlin-language-version-configured": "true",
     "node.js.detected.package.eslint": "true",

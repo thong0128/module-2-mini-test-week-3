@@ -3,10 +3,7 @@ package material;
 import java.io.*;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
-import java.util.ArrayList;
-import java.util.Comparator;
-import java.util.List;
-import java.util.Scanner;
+import java.util.*;
 
 public class MaterialManager implements Serializable {
     private List<Material> materialsList = new ArrayList<>();
@@ -24,6 +21,24 @@ public class MaterialManager implements Serializable {
         this.path = path;
         writeDataToFile();
     }
+    private String autoIdSetter() {
+        Set<Integer> idList = new HashSet<>();
+        for (Material material : materialsList) {
+            idList.add(Integer.parseInt(material.getId()));
+        }
+        int i = 1;
+        while (!idList.add(i)){
+            i++;
+        }
+        return String.valueOf(i);
+    }
+    private boolean idCheck(String id) {
+        Set<Integer> idList = new HashSet<>();
+        for (Material material : materialsList) {
+            idList.add(Integer.parseInt(material.getId()));
+        }
+        return idList.add(Integer.parseInt(id));
+    }
 
     public List<Material> getMaterialsList() {
         return materialsList;
@@ -39,6 +54,7 @@ public class MaterialManager implements Serializable {
 
     public void setPath(String path) {
         this.path = path;
+        writeDataToFile();
     }
 
     public void mainMenu() {
@@ -103,12 +119,12 @@ public class MaterialManager implements Serializable {
             myChoice = scanner.nextInt();
             switch (myChoice) {
                 case 1:
-                    materialsList.add(inputCrispyFlour());
+                    addCrispyFlour();
                     writeDataToFile();
                     mainMenu();
                     break;
                 case 2:
-                    materialsList.add(inputMeat());
+                    addMeat();
                     writeDataToFile();
                     mainMenu();
                     break;
@@ -120,33 +136,47 @@ public class MaterialManager implements Serializable {
             }
         }
     }
-    private static Material inputCrispyFlour() {
-        TempMaterial temp = getTempMaterial();
-        System.out.print("Enter quantity: ");
-        double quantity = doubleInput();
-        Material cf = new CrispyFlour(temp.id, temp.name, temp.date, temp.cost, quantity);
-        System.out.println(cf);
-        return cf;
+
+
+    private TempMaterial getTempMatarial() {
+        String id = autoIdSetter();
+        System.out.print("Enter name: ");
+        String name = stringInput();
+        System.out.print("Enter date (dd/MM/yyy): ");
+        LocalDate date = dateInput(stringInput());
+        System.out.print("Enter cost: ");
+        int cost = intInput();
+        return new TempMaterial(id, name, date, cost);
     }
-    private static Material inputMeat() {
-        TempMaterial temp = getTempMaterial();
-        System.out.print("Enter weight: ");
-        double weight = doubleInput();
-        Material meat = new Meat(temp.id, temp.name, temp.date, temp.cost, weight);
-        System.out.println(meat);
-        return meat;
-    }
+
     private static class TempMaterial {
         public final String id;
         public final String name;
         public final LocalDate date;
         public final int cost;
+
         public TempMaterial(String id, String name, LocalDate date, int cost) {
             this.id = id;
             this.name = name;
             this.date = date;
             this.cost = cost;
         }
+    }
+    private void addCrispyFlour() {
+        TempMaterial tempMaterial = getTempMatarial();
+        System.out.print("Enter quantity: ");
+        double quantity = doubleInput();
+        Material cf = new CrispyFlour(tempMaterial.id, tempMaterial.name, tempMaterial.date, tempMaterial.cost, quantity);
+        System.out.println(cf);
+        materialsList.add(cf);
+    }
+    private void addMeat() {
+        TempMaterial tempMaterial = getTempMatarial();
+        System.out.print("Enter weight: ");
+        double weight = doubleInput();
+        Material meat = new Meat(tempMaterial.id, tempMaterial.name, tempMaterial.date, tempMaterial.cost, weight);
+        System.out.println(meat);
+        materialsList.add(meat);
     }
     private static String stringInput() {
         Scanner scanner = new Scanner(System.in);
@@ -163,17 +193,6 @@ public class MaterialManager implements Serializable {
     private static double doubleInput() {
         Scanner scanner = new Scanner(System.in);
         return scanner.nextDouble();
-    }
-    private static TempMaterial getTempMaterial() {
-        System.out.print("Enter id: ");
-        String id = stringInput();
-        System.out.print("Enter name: ");
-        String name = stringInput();
-        System.out.print("Enter date (dd/MM/yyy): ");
-        LocalDate date = dateInput(stringInput());
-        System.out.print("Enter cost: ");
-        int cost = intInput();
-        return new TempMaterial(id, name, date, cost);
     }
     private void modifyMenu() {
         int myChoice = -1;
@@ -254,23 +273,28 @@ public class MaterialManager implements Serializable {
             }
         }
     }
-    private static void modifyID(Material material) {
-        System.out.println("ID: " + material.getId() + ". Enter new id:");
-        material.setId(stringInput());
+    private void modifyID(Material material) {
+        String id;
+        do {
+            System.out.println("ID: " + material.getId() + ". Enter new id:");
+            id = stringInput();
+            if (!idCheck(id)) System.out.println("Id already taken, please enter again");
+        }while (!idCheck(id));
+        material.setId(id);
     }
-    private static void modifyName(Material material) {
+    private void modifyName(Material material) {
         System.out.println("Name: " + material.getName() + ". Enter new name:");
         material.setName(stringInput());
     }
-    private static void modifyManuDate(Material material) {
+    private void modifyManuDate(Material material) {
         System.out.println("Date: " + material.getManufacturingDate() + ". Enter new date (dd/MM/yyy):");
         material.setManufacturingDate(dateInput(stringInput()));
     }
-    private static void modifyCost(Material material) {
+    private void modifyCost(Material material) {
         System.out.println("Cost: " + material.getCost() + ". Enter new cost:");
         material.setCost(intInput());
     }
-    private static void modifyQuantityWeight(Material material) {
+    private void modifyQuantityWeight(Material material) {
         if (material instanceof CrispyFlour) {
             System.out.println("Quantity: " + ((CrispyFlour) material).getQuantity() + ". Enter new quantity:");
             ((CrispyFlour) material).setQuantity(doubleInput());
@@ -283,14 +307,13 @@ public class MaterialManager implements Serializable {
     }
     private void removeMenu() {
         int myChoice = -1;
-        Scanner scanner = new Scanner(System.in);
         while (myChoice != 0) {
             System.out.println("-----Remove Menu-----");
             System.out.println("1.Remove by index");
             System.out.println("0.Back");
 
             System.out.print("Enter choice: ");
-            myChoice = scanner.nextInt();
+            myChoice = intInput();
 
             switch (myChoice) {
                 case 1:
@@ -301,7 +324,7 @@ public class MaterialManager implements Serializable {
                         Scanner input = new Scanner(System.in);
                         String ans = input.nextLine();
                         if (ans.equalsIgnoreCase("y")) {
-                            materialsList.remove(myChoice);
+                            materialsList.remove(index);
                             writeDataToFile();
                             break;
                         } else if (ans.equalsIgnoreCase("n")) {
@@ -361,11 +384,5 @@ public class MaterialManager implements Serializable {
             e.printStackTrace();
         }
         return materials;
-    }
-    private void addMaterialToFile(int index) throws ClassNotFoundException {
-        Material material = materialsList.get(index);
-        List<Material> tempList = readDataFromFile();
-        tempList.add(material);
-        writeDataToFile();
     }
 }
